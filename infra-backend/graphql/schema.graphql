@@ -23,4 +23,5 @@ input ToggleTodoInput {
 type Mutation {
   addTodo(addTodoInput: AddTodoInput!): Todo
   toggleTodo(toggleTodoInput: ToggleTodoInput!): Todo
+  deleteTodo(id: ID!): Boolean
 }

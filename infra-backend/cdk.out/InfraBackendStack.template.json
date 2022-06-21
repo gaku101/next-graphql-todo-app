@@ -42,7 +42,7 @@
             "ApiId"
           ]
         },
-        "Definition": "scalar AWSTimestamp\n\ntype Todo {\n  id: ID!\n  title: String!\n  completed: Boolean!\n  createdAt: AWSTimestamp!\n}\n\ntype Query {\n  getTodos: [Todo!]!\n}\n\ninput AddTodoInput {\n  title: String!\n}\n\ninput ToggleTodoInput {\n  id: ID!\n  completed: Boolean!\n}\n\ntype Mutation {\n  addTodo(addTodoInput: AddTodoInput!): Todo\n  toggleTodo(toggleTodoInput: ToggleTodoInput!): Todo\n}\n"
+        "Definition": "scalar AWSTimestamp\n\ntype Todo {\n  id: ID!\n  title: String!\n  completed: Boolean!\n  createdAt: AWSTimestamp!\n}\n\ntype Query {\n  getTodos: [Todo!]!\n}\n\ninput AddTodoInput {\n  title: String!\n}\n\ninput ToggleTodoInput {\n  id: ID!\n  completed: Boolean!\n}\n\ntype Mutation {\n  addTodo(addTodoInput: AddTodoInput!): Todo\n  toggleTodo(toggleTodoInput: ToggleTodoInput!): Todo\n  deleteTodo(id: ID!): Boolean\n}\n"
       },
       "Metadata": {
         "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/Schema"
@@ -57,7 +57,7 @@
             "ApiId"
           ]
         },
-        "Expires": 1687345307
+        "Expires": 1687346031
       },
       "DependsOn": [
         "TodoGraphqlApiSchema5BA2360F"
@@ -367,6 +367,107 @@
       ],
       "Metadata": {
         "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/toggleTodoDataSource/MutationtoggleTodoResolver/Resource"
+      }
+    },
+    "TodoGraphqlApideleteTodoDataSourceServiceRoleFF05C2A4": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "appsync.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/deleteTodoDataSource/ServiceRole/Resource"
+      }
+    },
+    "TodoGraphqlApideleteTodoDataSourceServiceRoleDefaultPolicyC45F720F": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "deleteTodoHandler9212022A",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "TodoGraphqlApideleteTodoDataSourceServiceRoleDefaultPolicyC45F720F",
+        "Roles": [
+          {
+            "Ref": "TodoGraphqlApideleteTodoDataSourceServiceRoleFF05C2A4"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/deleteTodoDataSource/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "TodoGraphqlApideleteTodoDataSourceEA32E154": {
+      "Type": "AWS::AppSync::DataSource",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "TodoGraphqlApi75425490",
+            "ApiId"
+          ]
+        },
+        "Name": "deleteTodoDataSource",
+        "Type": "AWS_LAMBDA",
+        "LambdaConfig": {
+          "LambdaFunctionArn": {
+            "Fn::GetAtt": [
+              "deleteTodoHandler9212022A",
+              "Arn"
+            ]
+          }
+        },
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "TodoGraphqlApideleteTodoDataSourceServiceRoleFF05C2A4",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/deleteTodoDataSource/Resource"
+      }
+    },
+    "TodoGraphqlApideleteTodoDataSourceMutationdeleteTodoResolver2F7B9575": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "TodoGraphqlApi75425490",
+            "ApiId"
+          ]
+        },
+        "FieldName": "deleteTodo",
+        "TypeName": "Mutation",
+        "DataSourceName": "deleteTodoDataSource",
+        "Kind": "UNIT"
+      },
+      "DependsOn": [
+        "TodoGraphqlApideleteTodoDataSourceEA32E154",
+        "TodoGraphqlApiSchema5BA2360F"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/deleteTodoDataSource/MutationdeleteTodoResolver/Resource"
       }
     },
     "getTodosHandlerServiceRoleB63DDE73": {
@@ -715,6 +816,124 @@
       "Metadata": {
         "aws:cdk:path": "InfraBackendStack/toggleTodoHandler/Resource",
         "aws:asset:path": "asset.79d8eac0dba48a25240f117fb771fb09fa117ef4121987569449800c3375a6da",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Code"
+      }
+    },
+    "deleteTodoHandlerServiceRoleDBF34EFF": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/deleteTodoHandler/ServiceRole/Resource"
+      }
+    },
+    "deleteTodoHandlerServiceRoleDefaultPolicy61CD87CF": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "TodoTable585F1D6B",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "deleteTodoHandlerServiceRoleDefaultPolicy61CD87CF",
+        "Roles": [
+          {
+            "Ref": "deleteTodoHandlerServiceRoleDBF34EFF"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/deleteTodoHandler/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "deleteTodoHandler9212022A": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "84cbfdef38b7e52a9a1ba6dab4d120aad744f5073c52eec808f5c155ac7a2a1b.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "deleteTodoHandlerServiceRoleDBF34EFF",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "TODO_TABLE": {
+              "Ref": "TodoTable585F1D6B"
+            },
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.handler",
+        "Runtime": "nodejs14.x"
+      },
+      "DependsOn": [
+        "deleteTodoHandlerServiceRoleDefaultPolicy61CD87CF",
+        "deleteTodoHandlerServiceRoleDBF34EFF"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/deleteTodoHandler/Resource",
+        "aws:asset:path": "asset.84cbfdef38b7e52a9a1ba6dab4d120aad744f5073c52eec808f5c155ac7a2a1b",
         "aws:asset:is-bundled": true,
         "aws:asset:property": "Code"
       }

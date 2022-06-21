@@ -77,6 +77,17 @@ export class InfraBackendStack extends cdk.Stack {
 
     todoTable.grantReadWriteData(toggleTodoLambda)
 
+    const deleteTodoLambda = new lambdaNodeJs.NodejsFunction(
+      this,
+      "deleteTodoHandler",
+      {
+        entry: path.join(__dirname, "../lambda/deleteTodo.ts"),
+        ...commonLambdaNodeJsProps,
+      }
+    )
+
+    todoTable.grantReadWriteData(deleteTodoLambda)
+
     // DataSource
     const getTodosDataSource = todoApi.addLambdaDataSource(
       "getTodosDataSource",
@@ -93,6 +104,11 @@ export class InfraBackendStack extends cdk.Stack {
       toggleTodoLambda
     )
 
+    const deleteTodoDataSource = todoApi.addLambdaDataSource(
+      "deleteTodoDataSource",
+      deleteTodoLambda
+    )
+
     // Resolver
     getTodosDataSource.createResolver({
       typeName: "Query",
@@ -107,6 +123,11 @@ export class InfraBackendStack extends cdk.Stack {
     toggleTodoDataSource.createResolver({
       typeName: "Mutation",
       fieldName: "toggleTodo",
+    })
+
+    deleteTodoDataSource.createResolver({
+      typeName: "Mutation",
+      fieldName: "deleteTodo",
     })
 
     // CfnOutput
