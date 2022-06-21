@@ -23,7 +23,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/616344db6fbbf622fd6cc7ffc8e3123d09d510facac6ebcbc5a5bc0edf9f6897.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/9de21d85faf4b533414ed5850c6c73d004637d033db7cd55baf479aee9d9433b.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -87,6 +87,30 @@
             "data": "TodoGraphqlApigetTodosDataSourceQuerygetTodosResolverACC4C695"
           }
         ],
+        "/InfraBackendStack/TodoGraphqlApi/addTodoDataSource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApiaddTodoDataSourceServiceRole740F851F"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/addTodoDataSource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApiaddTodoDataSourceServiceRoleDefaultPolicy8416E234"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/addTodoDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApiaddTodoDataSourceF42A64C6"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/addTodoDataSource/MutationaddTodoResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApiaddTodoDataSourceMutationaddTodoResolver7122515C"
+          }
+        ],
         "/InfraBackendStack/getTodosHandler/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -103,6 +127,24 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "getTodosHandlerA7ADDA08"
+          }
+        ],
+        "/InfraBackendStack/addTodoHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "addTodoHandlerServiceRole91F73CAF"
+          }
+        ],
+        "/InfraBackendStack/addTodoHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "addTodoHandlerServiceRoleDefaultPolicy32B2DD10"
+          }
+        ],
+        "/InfraBackendStack/addTodoHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "addTodoHandlerFB3DF209"
           }
         ],
         "/InfraBackendStack/GraphQlApiUrl": [

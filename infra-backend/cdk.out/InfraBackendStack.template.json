@@ -42,7 +42,7 @@
             "ApiId"
           ]
         },
-        "Definition": "scalar AWSTimestamp\n\ntype Todo {\n  id: ID!\n  title: String!\n  completed: Boolean!\n  createdAt: AWSTimestamp!\n}\n\ntype Query {\n  getTodos: [Todo!]!\n}\n"
+        "Definition": "scalar AWSTimestamp\n\ntype Todo {\n  id: ID!\n  title: String!\n  completed: Boolean!\n  createdAt: AWSTimestamp!\n}\n\ntype Query {\n  getTodos: [Todo!]!\n}\n\ninput AddTodoInput {\n  title: String!\n}\n\ntype Mutation {\n  addTodo(addTodoInput: AddTodoInput!): Todo\n}\n"
       },
       "Metadata": {
         "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/Schema"
@@ -57,7 +57,7 @@
             "ApiId"
           ]
         },
-        "Expires": 1687340936
+        "Expires": 1687344269
       },
       "DependsOn": [
         "TodoGraphqlApiSchema5BA2360F"
@@ -165,6 +165,107 @@
       ],
       "Metadata": {
         "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/getTodosDataSource/QuerygetTodosResolver/Resource"
+      }
+    },
+    "TodoGraphqlApiaddTodoDataSourceServiceRole740F851F": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "appsync.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/addTodoDataSource/ServiceRole/Resource"
+      }
+    },
+    "TodoGraphqlApiaddTodoDataSourceServiceRoleDefaultPolicy8416E234": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "addTodoHandlerFB3DF209",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "TodoGraphqlApiaddTodoDataSourceServiceRoleDefaultPolicy8416E234",
+        "Roles": [
+          {
+            "Ref": "TodoGraphqlApiaddTodoDataSourceServiceRole740F851F"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/addTodoDataSource/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "TodoGraphqlApiaddTodoDataSourceF42A64C6": {
+      "Type": "AWS::AppSync::DataSource",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "TodoGraphqlApi75425490",
+            "ApiId"
+          ]
+        },
+        "Name": "addTodoDataSource",
+        "Type": "AWS_LAMBDA",
+        "LambdaConfig": {
+          "LambdaFunctionArn": {
+            "Fn::GetAtt": [
+              "addTodoHandlerFB3DF209",
+              "Arn"
+            ]
+          }
+        },
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "TodoGraphqlApiaddTodoDataSourceServiceRole740F851F",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/addTodoDataSource/Resource"
+      }
+    },
+    "TodoGraphqlApiaddTodoDataSourceMutationaddTodoResolver7122515C": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "TodoGraphqlApi75425490",
+            "ApiId"
+          ]
+        },
+        "FieldName": "addTodo",
+        "TypeName": "Mutation",
+        "DataSourceName": "addTodoDataSource",
+        "Kind": "UNIT"
+      },
+      "DependsOn": [
+        "TodoGraphqlApiaddTodoDataSourceF42A64C6",
+        "TodoGraphqlApiSchema5BA2360F"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/TodoGraphqlApi/addTodoDataSource/MutationaddTodoResolver/Resource"
       }
     },
     "getTodosHandlerServiceRoleB63DDE73": {
@@ -277,6 +378,124 @@
       "Metadata": {
         "aws:cdk:path": "InfraBackendStack/getTodosHandler/Resource",
         "aws:asset:path": "asset.b8a415b71cb5848230d73d9d1b7e467cc549fe85109826204bd199a72d166a1a",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Code"
+      }
+    },
+    "addTodoHandlerServiceRole91F73CAF": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/addTodoHandler/ServiceRole/Resource"
+      }
+    },
+    "addTodoHandlerServiceRoleDefaultPolicy32B2DD10": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "TodoTable585F1D6B",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "addTodoHandlerServiceRoleDefaultPolicy32B2DD10",
+        "Roles": [
+          {
+            "Ref": "addTodoHandlerServiceRole91F73CAF"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/addTodoHandler/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "addTodoHandlerFB3DF209": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "442fb22e568c46519d68ef092bf40b29dca636c87f23bed5abc43958cbc6ce73.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "addTodoHandlerServiceRole91F73CAF",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "TODO_TABLE": {
+              "Ref": "TodoTable585F1D6B"
+            },
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.handler",
+        "Runtime": "nodejs14.x"
+      },
+      "DependsOn": [
+        "addTodoHandlerServiceRoleDefaultPolicy32B2DD10",
+        "addTodoHandlerServiceRole91F73CAF"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "InfraBackendStack/addTodoHandler/Resource",
+        "aws:asset:path": "asset.442fb22e568c46519d68ef092bf40b29dca636c87f23bed5abc43958cbc6ce73",
         "aws:asset:is-bundled": true,
         "aws:asset:property": "Code"
       }

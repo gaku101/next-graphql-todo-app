@@ -34,19 +34,37 @@ export class InfraBackendStack extends cdk.Stack {
     })
 
     // Lambda function
+    const commonLambdaNodeJsProps: Omit<
+      lambdaNodeJs.NodejsFunctionProps,
+      "entry"
+    > = {
+      handler: "handler",
+      environment: {
+        TODO_TABLE: todoTable.tableName,
+      },
+    }
+
     const getTodosLambda = new lambdaNodeJs.NodejsFunction(
       this,
       "getTodosHandler",
       {
         entry: path.join(__dirname, "../lambda/getTodos.ts"),
-        handler: "handler",
-        environment: {
-          TODO_TABLE: todoTable.tableName,
-        },
+        ...commonLambdaNodeJsProps,
       }
     )
 
     todoTable.grantReadData(getTodosLambda)
+
+    const addTodoLambda = new lambdaNodeJs.NodejsFunction(
+      this,
+      "addTodoHandler",
+      {
+        entry: path.join(__dirname, "../lambda/addTodo.ts"),
+        ...commonLambdaNodeJsProps,
+      }
+    )
+
+    todoTable.grantReadWriteData(addTodoLambda)
 
     // DataSource
     const getTodosDataSource = todoApi.addLambdaDataSource(
@@ -54,10 +72,20 @@ export class InfraBackendStack extends cdk.Stack {
       getTodosLambda
     )
 
+    const addTodoDataSource = todoApi.addLambdaDataSource(
+      "addTodoDataSource",
+      addTodoLambda
+    )
+
     // Resolver
     getTodosDataSource.createResolver({
       typeName: "Query",
       fieldName: "getTodos",
+    })
+
+    addTodoDataSource.createResolver({
+      typeName: "Mutation",
+      fieldName: "addTodo",
     })
 
     // CfnOutput
