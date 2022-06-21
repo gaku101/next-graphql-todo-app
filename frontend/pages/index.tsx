@@ -1,17 +1,18 @@
-import type { NextPage } from "next";
-import Head from 'next/head';
+import type { NextPage } from "next"
+import Head from "next/head"
+import { Home } from "../components/Home"
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   return (
     <div>
       <Head>
         <title>Todo App - frontend</title>
       </Head>
       <main>
-        <h1>Todo App</h1>
+        <Home />
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default HomePage
