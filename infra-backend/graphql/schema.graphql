@@ -15,6 +15,12 @@ input AddTodoInput {
   title: String!
 }
 
+input ToggleTodoInput {
+  id: ID!
+  completed: Boolean!
+}
+
 type Mutation {
   addTodo(addTodoInput: AddTodoInput!): Todo
+  toggleTodo(toggleTodoInput: ToggleTodoInput!): Todo
 }

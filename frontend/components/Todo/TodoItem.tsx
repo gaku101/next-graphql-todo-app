@@ -1,13 +1,30 @@
-import { useState } from "react"
-import { HStack, Text } from "@chakra-ui/react"
-import { Todo } from "../../graphql/generated/generated-types"
+import { useState, useCallback } from "react"
+import { HStack, Text, Checkbox } from "@chakra-ui/react"
+import {
+  Todo,
+  useToggleTodoMutation,
+} from "../../graphql/generated/generated-types"
 
 type TodoItemProps = {
   todo: Todo
 }
 
 export const TodoItem = ({ todo }: TodoItemProps) => {
-  const [todoItem] = useState<Todo>(todo)
+  const [todoItem, setTodoItem] = useState<Todo>(todo)
+
+  const [toggleTodo, { loading }] = useToggleTodoMutation()
+
+  const handleToggleTodo = useCallback(() => {
+    if (loading) return
+    toggleTodo({
+      variables: {
+        toggleTodoInput: { id: todoItem.id, completed: !todoItem.completed },
+      },
+      onCompleted: () => {
+        setTodoItem({ ...todoItem, completed: !todoItem.completed })
+      },
+    })
+  }, [loading, todoItem, toggleTodo])
 
   return (
     <HStack
@@ -19,12 +36,19 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
       justify='space-between'
       spacing={8}
     >
-      <Text
-        textDecoration={todoItem.completed ? "line-through" : undefined}
-        color={todoItem.completed ? "gray.500" : "black"}
-      >
-        {todoItem.title}
-      </Text>
+      <HStack spacing={8}>
+        <Checkbox
+          size='lg'
+          isChecked={todoItem.completed}
+          onChange={handleToggleTodo}
+        />
+        <Text
+          textDecoration={todoItem.completed ? "line-through" : undefined}
+          color={todoItem.completed ? "gray.500" : "black"}
+        >
+          {todoItem.title}
+        </Text>
+      </HStack>
     </HStack>
   )
 }

@@ -66,6 +66,17 @@ export class InfraBackendStack extends cdk.Stack {
 
     todoTable.grantReadWriteData(addTodoLambda)
 
+    const toggleTodoLambda = new lambdaNodeJs.NodejsFunction(
+      this,
+      "toggleTodoHandler",
+      {
+        entry: path.join(__dirname, "../lambda/toggleTodo.ts"),
+        ...commonLambdaNodeJsProps,
+      }
+    )
+
+    todoTable.grantReadWriteData(toggleTodoLambda)
+
     // DataSource
     const getTodosDataSource = todoApi.addLambdaDataSource(
       "getTodosDataSource",
@@ -77,6 +88,11 @@ export class InfraBackendStack extends cdk.Stack {
       addTodoLambda
     )
 
+    const toggleTodoDataSource = todoApi.addLambdaDataSource(
+      "toggleTodoDataSource",
+      toggleTodoLambda
+    )
+
     // Resolver
     getTodosDataSource.createResolver({
       typeName: "Query",
@@ -86,6 +102,11 @@ export class InfraBackendStack extends cdk.Stack {
     addTodoDataSource.createResolver({
       typeName: "Mutation",
       fieldName: "addTodo",
+    })
+
+    toggleTodoDataSource.createResolver({
+      typeName: "Mutation",
+      fieldName: "toggleTodo",
     })
 
     // CfnOutput
