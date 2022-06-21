@@ -23,7 +23,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/b0d7ab9d0e84845522cf35d4f327971c1badc1208fcda2563c5eb78a195826c4.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/616344db6fbbf622fd6cc7ffc8e3123d09d510facac6ebcbc5a5bc0edf9f6897.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -39,6 +39,84 @@
         "InfraBackendStack.assets"
       ],
       "metadata": {
+        "/InfraBackendStack/TodoTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoTable585F1D6B"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApi75425490"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/Schema": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApiSchema5BA2360F"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/DefaultApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApiDefaultApiKey9E30B287"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/getTodosDataSource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApigetTodosDataSourceServiceRole54AE6B6B"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/getTodosDataSource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApigetTodosDataSourceServiceRoleDefaultPolicyD35F8B0E"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/getTodosDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApigetTodosDataSourceD3D9F986"
+          }
+        ],
+        "/InfraBackendStack/TodoGraphqlApi/getTodosDataSource/QuerygetTodosResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodoGraphqlApigetTodosDataSourceQuerygetTodosResolverACC4C695"
+          }
+        ],
+        "/InfraBackendStack/getTodosHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "getTodosHandlerServiceRoleB63DDE73"
+          }
+        ],
+        "/InfraBackendStack/getTodosHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "getTodosHandlerServiceRoleDefaultPolicy0B88F194"
+          }
+        ],
+        "/InfraBackendStack/getTodosHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "getTodosHandlerA7ADDA08"
+          }
+        ],
+        "/InfraBackendStack/GraphQlApiUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GraphQlApiUrl"
+          }
+        ],
+        "/InfraBackendStack/GraphQlApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GraphQlApiKey"
+          }
+        ],
         "/InfraBackendStack/CDKMetadata/Default": [
           {
             "type": "aws:cdk:logicalId",
